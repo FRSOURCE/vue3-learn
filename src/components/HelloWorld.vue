@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <Counter />
+    <CounterButtons />
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
@@ -38,8 +40,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Counter from './Counter.vue';
+import CounterButtons from './CounterButtons.vue';
 
 export default defineComponent({
+  components: { Counter, CounterButtons },
   name: 'HelloWorld',
   props: {
     msg: String,
