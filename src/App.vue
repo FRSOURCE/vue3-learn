@@ -1,30 +1,65 @@
 <template>
 <ElContainer>
-  <Menu/>
-  <router-view/>
+  <ElButton @click="toggleMenu" icon="el-icon-more" v-if="isSm"/>
+  <component :class="{'menu--open': isMenuOpen}" class="menu" :is="menuPlacement">
+    <Menu @close="toggleMenu"/>
+  </component>
+  <ElMain><router-view/></ElMain>
 </ElContainer>
 </template>
 
-<script>
+<script lang="ts">
 import Menu from './components/Menu.vue';
-import { ElContainer } from 'element-plus';
+import { defineComponent, computed, ref } from 'vue';
+import { ElContainer, ElMain, ElHeader, ElAside, ElButton } from 'element-plus';
+import { breakpoints } from '@/shared/breakpoints';
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {
     Menu,
     ElContainer,
-  }
-}
+    ElMain,
+    ElHeader,
+    ElAside,
+    ElButton,
+  },
+  setup() {
+    const isMenuOpen = ref(false);
+    const isSm = breakpoints.smaller("sm");
+    const menuPlacement = computed(() => isSm.value ? 'ElAside' : 'ElHeader');
+    const toggleMenu = () => isMenuOpen.value = !isMenuOpen.value;
+
+    return {
+      menuPlacement,
+      isSm,
+      isMenuOpen,
+      toggleMenu,
+    }
+  },
+});
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss" scoped>
+.menu{
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  transform: translate(-100%);
+  transition: 0.5s transform ease-in-out;
+
+  &--open{
+    transform: none;
+  }
+}
+
+</style>
+
+<style lang="scss">
+.text-right{
+  text-align: right;
 }
 </style>

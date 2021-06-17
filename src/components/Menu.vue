@@ -1,10 +1,13 @@
 <template>
- <ElMenu :mode="mode" router>
-  <el-menu-item index="/">Subpage 1</el-menu-item>
-  <el-menu-item index="/about">Subpage 2</el-menu-item>
-  <el-menu-item>Button 1</el-menu-item>
-  <el-menu-item>Button 2</el-menu-item>
- </ElMenu>
+  <ElMenu :mode="mode" router>
+    <ElMenuItem @click="$emit('close')" class="text-right">
+      <i class="el-icon-close"/>
+    </ElMenuItem>
+    <ElMenuItem index="/">Subpage 1</ElMenuItem>
+    <ElMenuItem index="/about">Subpage 2</ElMenuItem>
+    <ElMenuItem>Button 1</ElMenuItem>
+    <ElMenuItem>Button 2</ElMenuItem>
+  </ElMenu>
 </template>
 
 <script lang="ts">
@@ -18,19 +21,13 @@ export default defineComponent({
       ElMenu,
       ElMenuItem,
   },
+  emits : ['close'],
   setup() {
     const isSm = breakpoints.smaller("sm");
-    const mode = computed(() => {
-      if (isSm.value) {
-        return "vertical";
-      } else {
-        return "horizontal";
-      }
-    })
+    const mode = computed(() => isSm.value? 'vertical': 'horizontal');
     return {
       mode,
     }
   },
 });
 </script>
-
