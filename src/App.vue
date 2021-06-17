@@ -1,16 +1,19 @@
 <template>
 <ElContainer>
   <Menu/>
+  <router-view/>
 </ElContainer>
 </template>
 
 <script>
-import Menu from './components/Menu.vue'
+import Menu from './components/Menu.vue';
+import { ElContainer } from 'element-plus';
 
 export default {
   name: 'App',
   components: {
     Menu,
+    ElContainer,
   }
 }
 </script>
