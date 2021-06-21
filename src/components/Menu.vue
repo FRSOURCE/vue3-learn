@@ -3,10 +3,9 @@
     <ElMenuItem @click="$emit('close')" class="text-right">
       <i class="el-icon-close"/>
     </ElMenuItem>
-    <ElMenuItem index="/">Subpage 1</ElMenuItem>
-    <ElMenuItem index="/about">Subpage 2</ElMenuItem>
-    <ElMenuItem>Button 1</ElMenuItem>
-    <ElMenuItem>Button 2</ElMenuItem>
+    <ElMenuItem index="/">Home</ElMenuItem>
+    <ElMenuItem index="/about">About</ElMenuItem>
+    <ElMenuItem index="/settings">Settings</ElMenuItem>
   </ElMenu>
 </template>
 
