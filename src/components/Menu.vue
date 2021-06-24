@@ -1,6 +1,6 @@
 <template>
-  <ElMenu :mode="mode" router>
-    <ElMenuItem @click="$emit('close')" class="text-right">
+  <ElMenu :mode="mode" router @select="$emit('close')">
+    <ElMenuItem class="text-right" v-if="isSm">
       <i class="el-icon-close"/>
     </ElMenuItem>
     <ElMenuItem index="/">Home</ElMenuItem>
@@ -26,6 +26,7 @@ export default defineComponent({
     const mode = computed(() => isSm.value? 'vertical': 'horizontal');
     return {
       mode,
+      isSm,
     }
   },
 });
