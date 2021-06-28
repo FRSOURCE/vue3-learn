@@ -1,12 +1,15 @@
 <template>
-  <ElForm @submit.prevent :model="form" label-width="120px">
+  <ElForm @submit.prevent :model="formData" label-width="120px" label-position="top" ref="form">
     <ElFormItem label="Resources">
-      <ElRadioGroup :modelValue="form.difficulty" @update:modelValue="setDifficulty($event)">
+      <ElRadioGroup :modelValue="formData.difficulty" @update:modelValue="setDifficulty($event)">
         <ElRadio label="Junior"></ElRadio>
         <ElRadio label="Mid"></ElRadio>
         <ElRadio label="Senior"></ElRadio>
       </ElRadioGroup>
-      <ElButton @click="saveForm" native-type="submit">Save</ElButton>
+    </ElFormItem>
+    <ElFormItem>
+      <ElButton type="primary" @click="saveForm" native-type="submit">Save</ElButton>
+      <ElButton @click="resetForm()">Reset</ElButton>
     </ElFormItem>
   </ElForm>
 </template>
@@ -26,14 +29,20 @@ export default defineComponent({
     ElButton,
   },
   setup () {
-    const form = {difficulty: ref(store.state.difficulty)};
-    const setDifficulty = (difficulty: string) => 
-      form.difficulty.value = difficulty;
-    const saveForm = () => store.commit('setDifficulty', form.difficulty.value);
+    const formData = {difficulty: ref(store.state.difficulty)};
+    const setDifficulty = (difficulty: string) => { 
+      formData.difficulty.value = difficulty;
+    }
+    const saveForm = () => store.commit('setDifficulty', formData.difficulty.value);
+    const form = ref<null | {resetFields: () => void}>(null);
+    const resetForm = () => form.value?.resetFields();
+    
     return {
-      form,
+      formData,
       saveForm,
       setDifficulty,
+      form,
+      resetForm,
     }
   },
 })
