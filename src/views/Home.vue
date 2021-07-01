@@ -1,21 +1,22 @@
 <template>
-  <div class="home">
-    <p>{{ difficulty }}</p>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+<router-link
+  to="/game"
+  custom
+  v-slot="{ navigate }"
+>
+  <ElButton @click="navigate">Start Game</ElButton>
+</router-link>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import store from '@/store';
-
+import { ElButton } from 'element-plus';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HelloWorld,
+    ElButton,
   },
   setup () {
     const difficulty = computed(() => {
