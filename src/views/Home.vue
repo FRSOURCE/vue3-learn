@@ -20,7 +20,7 @@ export default defineComponent({
   },
   setup () {
     const difficulty = computed(() => {
-      return store.state.difficulty;
+      return store.state.user.difficulty;
     });
     return {
       difficulty,
