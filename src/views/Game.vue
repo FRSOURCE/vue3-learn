@@ -25,7 +25,7 @@ export default defineComponent({
     },
     setup(){
         const userName = ref('');
-        const saveUserName = () => store.commit('user/setUserName', userName.value);
+        const saveUserName = () => store.commit('setUserName', userName.value);
         return {
             userName,
             saveUserName,

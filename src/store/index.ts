@@ -11,10 +11,7 @@ interface State {
 }
 
 const user = {
-  state: () => ({
-    difficulty: 'Junior',
-    userName: '',
-   }),
+  state: () => userState,
    mutations: {
       setDifficulty(state: typeof userState, difficulty:string){
         state.difficulty = difficulty;

@@ -33,7 +33,7 @@ export default defineComponent({
     const setDifficulty = (difficulty: string) => { 
       formData.difficulty.value = difficulty;
     }
-    const saveForm = () => store.commit('user/setDifficulty', formData.difficulty.value);
+    const saveForm = () => store.commit('setDifficulty', formData.difficulty.value);
     const form = ref<null | {resetFields: () => void}>(null);
     const resetForm = () => form.value?.resetFields();
     
