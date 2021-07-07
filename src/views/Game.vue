@@ -7,7 +7,7 @@
             <ElButton type="primary" @click="saveUserName" native-type="submit">Save</ElButton>
         </ElFormItem>
     </ElForm>
-    {{store.state.userName}}
+    {{ store.state.user.userName }}
 </template>
 
 <script lang="ts">

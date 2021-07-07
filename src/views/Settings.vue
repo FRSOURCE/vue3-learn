@@ -1,7 +1,7 @@
 <template>
   <ElForm @submit.prevent :model="formData" label-width="120px" label-position="top" ref="form">
     <ElFormItem label="Difficulty">
-      <ElRadioGroup :modelValue="formData.difficulty" @update:modelValue="setDifficulty($event)">
+      <ElRadioGroup :modelValue="formData.difficulty.value" @update:modelValue="setDifficulty($event)">
         <ElRadio label="Junior"></ElRadio>
         <ElRadio label="Mid"></ElRadio>
         <ElRadio label="Senior"></ElRadio>

@@ -1,33 +1,22 @@
 import createPersistedState from "vuex-persistedstate";
 import { createStore, Store } from 'vuex';
+import { user, UserState } from './user';
+import { game, GameState } from './game';
 
-const userState = {
-  difficulty: 'Junior',
-  userName: '',
-}
+const state = {};
 
-interface State {
-  user: typeof userState,
-}
+export type State = {
+  user: UserState,
+  game: GameState,
+} & typeof state;
 
-const user = {
-  state: () => userState,
-   mutations: {
-      setDifficulty(state: typeof userState, difficulty:string){
-        state.difficulty = difficulty;
-      },
-      setUserName(state: typeof userState, userName:string){
-        state.userName = userName;
-      }
-   },
-}
-
-const store = createStore({
-  state: {},
+export default createStore({
+  state,
   modules: {
-    user: user,
+    user,
+    game,
   },
-  plugins: [createPersistedState()],
-}) as Store<State>
-
-export default store;
+  plugins: [createPersistedState({
+    paths: ["user"]
+  })],
+}) as Store<State>;
