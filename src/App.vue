@@ -17,7 +17,9 @@
     </ElHeader>
     <ElMain><router-view/></ElMain>
   </div>
-  
+  <div>
+    <VueKit/>
+  </div>
   
 </ElContainer>
 </template>
@@ -27,6 +29,7 @@ import Menu from './components/Menu.vue';
 import { defineComponent, computed, ref } from 'vue';
 import { ElContainer, ElMain, ElHeader, ElAside, ElButton } from 'element-plus';
 import { breakpoints } from '@/shared/breakpoints';
+import VueKit from './components/VueKit.vue';
 
 export default defineComponent({
   name: 'App',
@@ -37,6 +40,7 @@ export default defineComponent({
     ElHeader,
     ElAside,
     ElButton,
+    VueKit,
   },
   setup() {
     const isMenuOpen = ref(false);
