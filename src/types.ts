@@ -1,4 +1,6 @@
-export type MapElements = Array<{
+export type MapElements = Array<MapElement>;
+
+export type MapElement = {
     id: number,
     x: number,
     y: number,
@@ -13,8 +15,8 @@ export type MapElements = Array<{
     animationClass: {
         'doors__spritesheet--opening': boolean,
         'doors__spritesheet--closing': boolean,
-    } | string,
-}>;
+    },
+}
 
 export type SpriteBoxStyle = Array<{
     position: string,
@@ -33,3 +35,22 @@ export type MapSize = {
     width: number,
     height: number,
 };
+
+export type Player = {
+    x: number,
+    y: number,
+};
+
+export type EntranceField = {
+    x: number,
+    y: number,
+};
+
+export type Entrance = Array<EntranceField>;
+
+export type Obstacle = {
+    x: number,
+    y: number,
+};
+
+export type Obstacles = Array<Obstacle>;

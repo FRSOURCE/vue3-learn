@@ -18,9 +18,10 @@
     <ElMain><router-view/></ElMain>
   </div>
   <div>
-    <VueKit/>
+    <!-- <VueKit/> -->
+    <Board/>
   </div>
-  <Board/>
+  
   
 </ElContainer>
 </template>

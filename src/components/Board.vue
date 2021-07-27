@@ -8,54 +8,44 @@
       @keydown.left="moveLeft()" 
       @keydown.right="moveRight()"
       tabindex="0" 
-      :style="moveBoard"
+      :style="[moveBoard, mapURL]"
     >
-      <div class="player" :style="moveCharacter">
-        <img
-          v-if="moveDirection === ''"
-          class="player__spritesheet" 
-          :class="{
-            'player__spritesheet--face-down': facingDirection === 'down',
-            'player__spritesheet--face-up': facingDirection === 'up',
-            'player__spritesheet--face-left': facingDirection === 'left',
-            'player__spritesheet--face-right': facingDirection === 'right',
-          }" 
-          src="../assets/character-staying.png" 
-          alt="staying-character"
-        >
-        <img
-          v-else
-          class="player__spritesheet" 
-          :class="{
-            'player__spritesheet--move-down': moveDirection === 'down',
-            'player__spritesheet--move-up': moveDirection === 'up',
-            'player__spritesheet--move-left': moveDirection === 'left',
-            'player__spritesheet--move-right': moveDirection === 'right',
-          }" 
-          src="../assets/character-run.png" 
-          alt="walking-character"
-        >
-      </div>
+      <Player :characterCoords="characterCoords" :mapSize="mapSize" :moveDirection="moveDirection" :facingDirection="facingDirection"/>
       <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
+    </div>
+    <div class="navigation">
+      <ElButton @click="moveLeft()" icon="el-icon-caret-left" />
+      <ElButton @click="moveUp()" icon="el-icon-caret-top" />
+      <ElButton @click="moveRight()" icon="el-icon-caret-right" />
+      <ElButton @click="moveDown()" icon="el-icon-caret-bottom" />
+
+      <ElButton  icon="el-icon-thumb" />
     </div>
     <ElevatorView v-if="isElevatorView"/>
   </div>
+  
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import ElevatorView from '@/components/ElevatorView.vue';
 import MapElements from '@/components/MapElements.vue';
-import { animationSpeed, dimension } from '@/variables/variables.ts';
+import { animationSpeed, dimension } from '@/variables/variables';
 import maps from '@/json/maps.json';
+import { ElButton } from 'element-plus';
+import Player from '@/components/Player.vue';
+import { MapElement, EntranceField, Obstacle } from '@/types';
 
 export default defineComponent({
   name: 'Board',
   components: {
     ElevatorView,
     MapElements,
+    ElButton,
+    Player,
   },
   setup() {
+    //TODO arrow keys should not scroll page
     const chosenMap = ref('map1');
     const map = computed(() => {
       switch (chosenMap.value) {
@@ -68,24 +58,26 @@ export default defineComponent({
     });
 
     const mapSize = {width: map.value.mapSize.width, height: map.value.mapSize.height};
-    const characterCoords = {x: ref(map.value.startingCharacterCoords.x), y: ref(map.value.startingCharacterCoords.y)};
+    const characterCoords = ref({x: map.value.startingCharacterCoords.x, y: map.value.startingCharacterCoords.y});
     const mapElements = ref(map.value.mapElements);
-    mapElements.value.forEach(element => {
+    mapElements.value.forEach((element :MapElement) => {
       element.width *= dimension;
       element.height *= dimension;
     })
 
     const entrance = map.value.entrance;
     const obstacle = map.value.obstacle;
+    const mapName = map.value.mapName;
 
-    const board = ref(null);
+    const board = ref<HTMLDivElement>();
     let moveDirection = ref('');
     let facingDirection = ref('down');
     const isElevatorView = ref(false);
+
     const moveDown = () => {
-      if (!obstacle.every(obs => obs.y !== characterCoords.y.value + 1 || obs.x !== characterCoords.x.value)) return;
-      if (characterCoords.y.value !== mapSize.height - 1 && moveDirection.value === '') {
-        characterCoords.y.value++;
+      if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y + 1 || obs.x !== characterCoords.value.x)) return;
+      if (characterCoords.value.y !== mapSize.height - 1 && moveDirection.value === '') {
+        characterCoords.value.y++;
         moveDirection.value = 'down';
         facingDirection.value = 'down';
         setTimeout(() => {
@@ -98,9 +90,9 @@ export default defineComponent({
     };
 
     const moveUp = () => {
-      if (!obstacle.every(obs => obs.y !== characterCoords.y.value - 1 || obs.x !== characterCoords.x.value)) return;
-      if (characterCoords.y.value !== 2 && moveDirection.value === '') {
-        characterCoords.y.value--;
+      if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y - 1 || obs.x !== characterCoords.value.x)) return;
+      if (characterCoords.value.y !== 2 && moveDirection.value === '') {
+        characterCoords.value.y--;
         moveDirection.value = 'up';
         facingDirection.value = 'up';
         setTimeout(() => {
@@ -113,9 +105,9 @@ export default defineComponent({
     };
 
     const moveRight = () => {
-      if (!obstacle.every(obs => obs.y !== characterCoords.y.value || obs.x !== characterCoords.x.value + 1)) return;
-      if (characterCoords.x.value !== mapSize.width - 2 && moveDirection.value === '') {
-        characterCoords.x.value++;
+      if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y || obs.x !== characterCoords.value.x + 1)) return;
+      if (characterCoords.value.x !== mapSize.width - 2 && moveDirection.value === '') {
+        characterCoords.value.x++;
         moveDirection.value = 'right';
         facingDirection.value = 'right';
         setTimeout(() => {
@@ -128,9 +120,9 @@ export default defineComponent({
     };
 
     const moveLeft = () => {
-      if (!obstacle.every(obs => obs.y !== characterCoords.y.value || obs.x !== characterCoords.x.value - 1)) return;
-      if (characterCoords.x.value !== 1 && moveDirection.value === '') {
-        characterCoords.x.value--;
+      if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y || obs.x !== characterCoords.value.x - 1)) return;
+      if (characterCoords.value.x !== 1 && moveDirection.value === '') {
+        characterCoords.value.x--;
         moveDirection.value = 'left';
         facingDirection.value = 'left';
         setTimeout(() => {
@@ -143,16 +135,16 @@ export default defineComponent({
     };
 
     const openCloseDoor = () => {
-      mapElements.value.forEach(door => {
+      mapElements.value.forEach((door :MapElement) => {
         if (door.category === 'door') {
-          if ((characterCoords.x.value === door.x && characterCoords.y.value === door.y)
-            || (characterCoords.x.value === door.x + 1 && characterCoords.y.value === door.y) 
-            || (characterCoords.x.value === door.x - 1 && characterCoords.y.value === door.y) 
-            || (characterCoords.x.value === door.x && characterCoords.y.value === door.y + 1)
-            || (characterCoords.x.value === door.x && characterCoords.y.value === door.y - 1)) {
+          if ((characterCoords.value.x === door.x && characterCoords.value.y === door.y)
+            || (characterCoords.value.x === door.x + 1 && characterCoords.value.y === door.y) 
+            || (characterCoords.value.x === door.x - 1 && characterCoords.value.y === door.y) 
+            || (characterCoords.value.x === door.x && characterCoords.value.y === door.y + 1)
+            || (characterCoords.value.x === door.x && characterCoords.value.y === door.y - 1)) {
             door.animationClass['doors__spritesheet--opening'] = true;
             door.animationClass['doors__spritesheet--closing'] = false;
-          } else if (!door.isClosed) {
+          } else {
             door.animationClass['doors__spritesheet--opening'] = false;
             door.animationClass['doors__spritesheet--closing'] = true;
           }
@@ -161,12 +153,12 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      board.value.focus();
+      if(board.value) board.value.focus();
     });
 
     const changeZPosition = () => {
-      mapElements.value.forEach(element => {
-        if (characterCoords.y.value <= element.y) {
+      mapElements.value.forEach((element :MapElement) => {
+        if (characterCoords.value.y <= element.y) {
           element.isObjectHigher = true;
         } else {
           element.isObjectHigher = false;
@@ -175,8 +167,8 @@ export default defineComponent({
     };
 
     const checkEntering = () => {
-      entrance.forEach(entranceField => {
-        if (characterCoords.x.value === entranceField.x && characterCoords.y.value === entranceField.y) {
+      entrance.forEach((entranceField :EntranceField) => {
+        if (characterCoords.value.x === entranceField.x && characterCoords.value.y === entranceField.y) {
           changeMap();
         }
       });
@@ -186,11 +178,12 @@ export default defineComponent({
       isElevatorView.value = true;
     }
 
-    const moveBoard = computed (() => `transform: translate(${ -dimension * (characterCoords.x.value - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.y.value - (mapSize.height - 1) / 2) + 'px'})`
+    const moveBoard = computed (() => `transform: translate(${ -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
     );
 
-    const moveCharacter = computed (() => `transform: translate(${ dimension * (characterCoords.x.value - (mapSize.width - 1) / 2 - 0.5) + 'px'}, ${ dimension * (characterCoords.y.value - (mapSize.height - 1) / 2 - 2) + 'px'})`
-    );
+    const mapURL = {
+        'background-image': `url(${require('../assets/' + mapName)})`,
+    }
 
     return{
       board,
@@ -200,13 +193,13 @@ export default defineComponent({
       moveRight,
       moveLeft,
       moveBoard,
-      moveCharacter,
       characterCoords,
       moveDirection,
       facingDirection,
       isElevatorView,
       mapElements,
       mapSize,
+      mapURL,
     }
   }
 });
@@ -225,57 +218,9 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     height: 480px;
-    background-image: url('../assets/basement.png');
     background-position: center;
     background-repeat: no-repeat;
     transition: transform $animationSpeed ease-in-out;
-  }
-  
-  .player {
-    position: absolute;
-    overflow: hidden;
-    top: calc(50%);
-    left: calc(50%);
-    width: $dimension;
-    height: $dimension * 2;
-    z-index: 50;
-    transition: transform $animationSpeed ease-in-out;
-
-    &__spritesheet {
-      transform: translateX(-75%);
-
-      &--move-down {
-        animation: downSpritesheet $animationSpeed steps(6);
-      } 
-
-      &--move-up {
-        animation: upSpritesheet $animationSpeed steps(6);
-      } 
-
-      &--move-left {
-        animation: leftSpritesheet $animationSpeed steps(6);
-      }
-
-      &--move-right {
-        animation: rightSpritesheet $animationSpeed steps(6);
-      }
-
-      &--face-down {
-        animation: downSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-up {
-        animation: upSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-left {
-        animation: leftSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-right {
-        animation: rightSpritesheet $animationSpeed steps(6) infinite;
-      }
-    }
   }
 
   .object-higher {
@@ -285,41 +230,4 @@ export default defineComponent({
   .object-lower {
     z-index: 40;
   }
-
-  @keyframes downSpritesheet {
-    from {
-      transform: translateX(-75%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
-
-  @keyframes upSpritesheet {
-    from {
-      transform: translateX(-25%);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes leftSpritesheet {
-    from {
-      transform: translateX(-50%);
-    }
-    to {
-      transform: translateX(-75%);
-    }
-  }
-
-  @keyframes rightSpritesheet {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-25%);
-    }
-  }
-
 </style>
