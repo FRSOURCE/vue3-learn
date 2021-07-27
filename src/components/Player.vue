@@ -55,7 +55,7 @@ export default defineComponent({
     },
     setup(props) {
         const { characterCoords, mapSize } = toRefs(props);
-        const moveCharacter = computed (() => `transform: translate(${ dimension * (characterCoords.value.x - (mapSize.value.width - 1) / 2 - 0.5) + 'px'}, ${ dimension * (characterCoords.value.y - (mapSize.value.height - 1) / 2 - 2) + 'px'})`
+        const moveCharacter = computed (() => `transform: translate(${ dimension * (characterCoords.value.x - (mapSize.value.width - 1) / 2 - 0.5) + 'px'}, ${ dimension * (characterCoords.value.y - (mapSize.value.height - 1) / 2 - 1.75) + 'px'})`
         );
         return {
             moveCharacter,

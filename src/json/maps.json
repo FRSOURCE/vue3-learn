@@ -48,5 +48,54 @@
                 "animationClass": "quest-arrow__spritesheet"
             }
         ]
-    }    
+    },
+    "map0": {
+        "mapName": "lobby.png",
+        "mapSize": {
+            "width": 21, 
+            "height": 13
+        },
+        "startingCharacterCoords": {
+            "x": 10,
+            "y": 11
+        },
+        "entrance": [
+            {"x": 2, "y": 1}, 
+            {"x": 3, "y": 1}, 
+            {"x": 7, "y": 1},
+            {"x": 8, "y": 1}],
+        "obstacle": [
+            {"x": 10, "y": 2}, {"x": 10, "y": 3}, {"x": 10, "y": 4}, {"x": 10, "y": 5}, {"x": 10, "y": 6}, {"x": 11, "y": 6}, {"x": 12, "y": 7}, {"x": 13, "y": 7}, {"x": 14, "y": 8}, {"x": 14, "y": 9}, {"x": 15, "y": 9}, {"x": 16, "y": 10}, {"x": 17, "y": 10}, {"x": 18, "y": 11}, {"x": 1, "y": 9}, {"x": 2, "y": 9}, {"x": 1, "y": 10}, {"x": 2, "y": 10}, {"x": 1, "y": 11}, {"x": 2, "y": 11}, {"x": 3, "y": 9}, {"x": 3, "y": 10}, {"x": 3, "y": 9}, {"x": 4, "y": 9}, {"x": 3, "y": 10}, {"x": 4, "y": 10}, {"x": 3, "y": 5}, {"x": 4, "y": 5}, {"x": 5, "y": 5}, {"x": 6, "y": 5}, {"x": 7, "y": 5}, {"x": 1, "y": 12}, {"x": 2, "y": 12}, {"x": 3, "y": 12}, {"x": 4, "y": 12}, {"x": 5, "y": 12}, {"x": 6, "y": 12}, {"x": 7, "y": 12}, {"x": 8, "y": 12}, {"x": 12, "y": 12}, {"x": 13, "y": 12}, {"x": 14, "y": 12}, {"x": 15, "y": 12}, {"x": 16, "y": 12}, {"x": 17, "y": 12}, {"x": 18, "y": 12}, {"x": 19, "y": 12}, {"x": 20, "y": 12}
+        ],
+        "mapElements": [
+            {
+                "id": 1, 
+                "x": 5, 
+                "y": 5, 
+                "xOffset": 0, 
+                "yOffset": 0, 
+                "width": 5, 
+                "height": 3, 
+                "isObjectHigher": false, 
+                "category": "object", 
+                "fileName": "lobby-desk.png", 
+                "alt": "desk", 
+                "animationClass": false
+            }, 
+            {
+                "id": 2, 
+                "x": 1, 
+                "y": 10, 
+                "xOffset": 0.5, 
+                "yOffset": -0.5, 
+                "width": 2, 
+                "height": 5, 
+                "isObjectHigher": false, 
+                "category": "object", 
+                "fileName": "lobby-sofa_palm.png", 
+                "alt": "sofa&palm", 
+                "animationClass": false
+            }
+        ]
+    }  
 }

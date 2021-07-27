@@ -14,11 +14,12 @@
       <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
     </div>
     <div class="navigation">
-      <ElButton @click="moveLeft()" icon="el-icon-caret-left" />
       <ElButton @click="moveUp()" icon="el-icon-caret-top" />
-      <ElButton @click="moveRight()" icon="el-icon-caret-right" />
+      <ElButton @click="moveLeft()" icon="el-icon-caret-left" />
       <ElButton @click="moveDown()" icon="el-icon-caret-bottom" />
-
+      <ElButton @click="moveRight()" icon="el-icon-caret-right" />
+      
+      
       <ElButton  icon="el-icon-thumb" />
     </div>
     <ElevatorView v-if="isElevatorView"/>
@@ -46,9 +47,13 @@ export default defineComponent({
   },
   setup() {
     //TODO arrow keys should not scroll page
-    const chosenMap = ref('map1');
+    //TODO: map0: cant reach elevator entrance
+    //TODO: map1: sink as separate element
+    const chosenMap = ref('map0');
     const map = computed(() => {
       switch (chosenMap.value) {
+        case 'map0':
+          return maps.map0;
         case 'map1':
           return maps.map1;
         default:
@@ -221,6 +226,60 @@ export default defineComponent({
     background-position: center;
     background-repeat: no-repeat;
     transition: transform $animationSpeed ease-in-out;
+  }
+  
+  .navigation{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0 0 10px 10px;
+  }
+
+  .player {
+    position: absolute;
+    overflow: hidden;
+    top: calc(50%);
+    left: calc(50%);
+    width: $dimension;
+    height: $dimension * 2;
+    z-index: 50;
+    transition: transform $animationSpeed ease-in-out;
+
+    &__spritesheet {
+      transform: translateX(-75%);
+
+      &--move-down {
+        animation: downSpritesheet $animationSpeed steps(6);
+      } 
+
+      &--move-up {
+        animation: upSpritesheet $animationSpeed steps(6);
+      } 
+
+      &--move-left {
+        animation: leftSpritesheet $animationSpeed steps(6);
+      }
+
+      &--move-right {
+        animation: rightSpritesheet $animationSpeed steps(6);
+      }
+
+      &--face-down {
+        animation: downSpritesheet $animationSpeed steps(6) infinite;
+      }
+
+      &--face-up {
+        animation: upSpritesheet $animationSpeed steps(6) infinite;
+      }
+
+      &--face-left {
+        animation: leftSpritesheet $animationSpeed steps(6) infinite;
+      }
+
+      &--face-right {
+        animation: rightSpritesheet $animationSpeed steps(6) infinite;
+      }
+    }
   }
 
   .object-higher {
