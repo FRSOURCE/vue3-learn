@@ -20,6 +20,7 @@
   <div>
     <VueKit/>
   </div>
+  <Board/>
   
 </ElContainer>
 </template>
@@ -30,6 +31,7 @@ import { defineComponent, computed, ref } from 'vue';
 import { ElContainer, ElMain, ElHeader, ElAside, ElButton } from 'element-plus';
 import { breakpoints } from '@/shared/breakpoints';
 import VueKit from './components/VueKit.vue';
+import Board from '@/components/Board.vue';
 
 export default defineComponent({
   name: 'App',
@@ -41,6 +43,7 @@ export default defineComponent({
     ElAside,
     ElButton,
     VueKit,
+    Board,
   },
   setup() {
     const isMenuOpen = ref(false);
