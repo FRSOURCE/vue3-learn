@@ -7,13 +7,14 @@
       @keydown.up="moveUp()" 
       @keydown.left="moveLeft()" 
       @keydown.right="moveRight()"
+      @keydown.space="interact()"
       tabindex="0" 
-      :style="[moveBoard, mapURL]"
+      :style="[moveBoard, mapURL, mapDimension]"
     >
       <Player :characterCoords="characterCoords" :mapSize="mapSize" :moveDirection="moveDirection" :facingDirection="facingDirection"/>
       <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
     </div>
-    <div class="navigation">
+    <div  class="navigation" :style="[navigationTop]">
       <div >
         <div class="navigation__row">
           <ElButton class="mb-10" @click="moveUp()" icon="el-icon-caret-top" />
@@ -52,7 +53,7 @@ export default defineComponent({
   setup() {
     //TODO arrow keys should not scroll page
     //TODO: map0: cant reach elevator entrance - entrance on fields around and interaction click (add interaction click)
-    const chosenMap = ref('map1');
+    const chosenMap = ref('map0');
     const map = computed(() => {
       switch (chosenMap.value) {
         case 'map0':
@@ -93,7 +94,6 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
-        checkEntering();
       }
     };
 
@@ -108,7 +108,6 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
-        checkEntering();
       }
     };
 
@@ -123,7 +122,6 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
-        checkEntering();
       }
     };
 
@@ -138,7 +136,6 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
-        checkEntering();
       }
     };
 
@@ -175,23 +172,45 @@ export default defineComponent({
     };
 
     const checkEntering = () => {
-      entrance.forEach((entranceField :EntranceField) => {
+      entrance.entranceFields.forEach((entranceField :EntranceField) => {
         if (characterCoords.value.x === entranceField.x && characterCoords.value.y === entranceField.y) {
-          changeMap();
+          if (entrance.entrancePosition === 'below') {
+            moveDown();
+          } else if (entrance.entrancePosition === 'above') {
+            moveUp();
+          }
+          setTimeout(() => {
+            changeMap();
+          },animationSpeed * 2);
         }
       });
+    };
+
+    const interact = () => {
+      checkEntering();
     }
 
     const changeMap = () => {
       isElevatorView.value = true;
     }
+    const translateValue = computed(() =>{
+      console.log(mapSize.width*dimension);
+      console.log(window.innerWidth);
+      console.log(window.innerWidth > mapSize.width*dimension);
+      if(window.innerWidth > mapSize.width*dimension) return true ;
+      return (-mapSize.width*dimension/4) -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px';
+    });
 
-    const moveBoard = computed (() => `transform: translate(${ -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
+    const moveBoard = computed (() => `transform: translate(${-dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
     );
+
+    const mapDimension = ref(`height: ${(mapSize.height * dimension) + 'px'}; width: ${(mapSize.width * dimension) + 'px'}`);
 
     const mapURL = {
         'background-image': `url(${require('../assets/' + mapName)})`,
-    }
+    };
+
+    const navigationTop = ref(`top: ${(mapSize.height * dimension) + 'px'};`);
 
     return{
       board,
@@ -208,6 +227,9 @@ export default defineComponent({
       mapElements,
       mapSize,
       mapURL,
+      mapDimension,
+      navigationTop,
+      interact,
     }
   }
 });
@@ -219,13 +241,13 @@ export default defineComponent({
 
   .box {
     position: relative;
-    overflow: hidden;
+    display:flex;
+    justify-content: center;
   }
 
   .board {
     display: flex;
     justify-content: center;
-    height: 480px;
     background-position: center;
     background-repeat: no-repeat;
     transition: transform $animationSpeed ease-in-out;
@@ -233,14 +255,18 @@ export default defineComponent({
   
   .navigation{
     position: fixed;
-    bottom: 0;
+    //bottom: 50%;
     left: 0;
     margin: 0 0 10px 10px;
     display: flex;
+    // @media (min-width: 800px) {
+    //   bottom: 0;
+    // }
     &__row{
       display:flex;
       justify-content: center;
     }
+    
   }
 
   .object-higher {

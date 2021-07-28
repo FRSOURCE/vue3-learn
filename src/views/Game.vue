@@ -1,5 +1,6 @@
 <template>
-    <ElForm @submit.prevent label-position="top">
+    <Board/>
+    <!-- <ElForm @submit.prevent label-position="top">
         <ElFormItem>
             <ElInput v-model="userName"/>
         </ElFormItem>
@@ -7,21 +8,23 @@
             <ElButton type="primary" @click="saveUserName" native-type="submit">Save</ElButton>
         </ElFormItem>
     </ElForm>
-    {{ store.state.user.userName }}
+    {{ store.state.user.userName }} -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import {ElForm, ElFormItem, ElInput, ElButton} from 'element-plus';
+//import {ElForm, ElFormItem, ElInput, ElButton} from 'element-plus';
 import store from '@/store';
+import Board from '@/components/Board.vue';
 
 export default defineComponent({
     name: 'Game',
     components: {
-        ElForm,
-        ElFormItem,
-        ElInput,
-        ElButton,
+        // ElForm,
+        // ElFormItem,
+        // ElInput,
+        // ElButton,
+        Board
     },
     setup(){
         const userName = ref('');

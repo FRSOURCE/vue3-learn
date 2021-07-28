@@ -17,10 +17,10 @@
     </ElHeader>
     <ElMain><router-view/></ElMain>
   </div>
-  <div>
-    <!-- <VueKit/> -->
-    <Board/>
-  </div>
+  <!-- <div>
+    <VueKit/>
+    <Board/> wczytac rozmiar mapy
+  </div> -->
   
   
 </ElContainer>

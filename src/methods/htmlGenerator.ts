@@ -1,5 +1,5 @@
 
-export const sfcHtmlGenerator = (componentHTML: string) => `
+export const sfcHtmlGenerator = (componentHTML: string):string => `
 <!DOCTYPE html>
 <html>
 <body>
@@ -26,9 +26,30 @@ export const sfcHtmlGenerator = (componentHTML: string) => `
       },
     }
 
-    Vue
-      .createApp(Vue.defineAsyncComponent(() => window['vue3-sfc-loader'].loadModule('file.vue', options)))
-      .mount('#app');
+    window.onerror = function (message, url, line, call, error) {
+      console.log(message, url, line, call, error);
+      return true;
+    }
+
+    window.addEventListener('error', function(e){
+      console.log(e);
+    }) 
+
+    const app = Vue
+      .createApp(Vue.defineAsyncComponent(() => {
+        try{
+          return window['vue3-sfc-loader'].loadModule('file.vue', options)
+        } catch(e) {
+          console.log(e);
+        }
+      }));
+      app.config.errorHandler = (e, vm, info) => {
+        console.log(e, vm, info);
+      } 
+      app.config.warnHandler = (e, vm, info) => {
+        console.log(e, vm, info);
+      } 
+      app.mount('#app');
 
   </script>
 </body>
