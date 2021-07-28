@@ -46,6 +46,20 @@
                 "fileName": "quest-arrow.png", 
                 "alt": "quest arrow", 
                 "animationClass": "quest-arrow__spritesheet"
+            },
+            {
+                "id": 3, 
+                "x": 12, 
+                "y": 5, 
+                "xOffset": 0.5, 
+                "yOffset": 0, 
+                "width": 2, 
+                "height": 1, 
+                "isObjectHigher": false, 
+                "category": "object", 
+                "fileName": "basement-sink.png", 
+                "alt": "sink", 
+                "animationClass": false
             }
         ]
     },
@@ -95,6 +109,20 @@
                 "fileName": "lobby-sofa_palm.png", 
                 "alt": "sofa&palm", 
                 "animationClass": false
+            },
+            {
+                "id": 3, 
+                "x": 5, 
+                "y": 5, 
+                "xOffset": 0, 
+                "yOffset": -0.5, 
+                "width": 1, 
+                "height": 2, 
+                "isObjectHigher": false, 
+                "category": "object", 
+                "fileName": "lobby-receptionist.png", 
+                "alt": "receptionist", 
+                "animationClass": "animation-0_100-7"
             }
         ]
     }  

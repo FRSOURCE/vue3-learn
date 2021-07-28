@@ -85,6 +85,10 @@ export default defineComponent({
     }
   }
 
+  .animation-0_100-7 {
+    animation: closeDoor $animationSpeed * 2.5 steps(7) infinite;
+  }
+
   @keyframes closeDoor {
     from {
       transform: translateX(0);

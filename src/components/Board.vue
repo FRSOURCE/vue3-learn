@@ -14,13 +14,17 @@
       <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
     </div>
     <div class="navigation">
-      <ElButton @click="moveUp()" icon="el-icon-caret-top" />
-      <ElButton @click="moveLeft()" icon="el-icon-caret-left" />
-      <ElButton @click="moveDown()" icon="el-icon-caret-bottom" />
-      <ElButton @click="moveRight()" icon="el-icon-caret-right" />
-      
-      
-      <ElButton  icon="el-icon-thumb" />
+      <div >
+        <div class="navigation__row">
+          <ElButton class="mb-10" @click="moveUp()" icon="el-icon-caret-top" />
+        </div>
+        <div class="navigation__row">
+          <ElButton @click="moveLeft()" icon="el-icon-caret-left" />
+          <ElButton @click="moveDown()" icon="el-icon-caret-bottom" />
+          <ElButton @click="moveRight()" icon="el-icon-caret-right" />
+        </div>
+      </div>
+      <!-- <ElButton  icon="el-icon-thumb" /> -->
     </div>
     <ElevatorView v-if="isElevatorView"/>
   </div>
@@ -47,9 +51,8 @@ export default defineComponent({
   },
   setup() {
     //TODO arrow keys should not scroll page
-    //TODO: map0: cant reach elevator entrance
-    //TODO: map1: sink as separate element
-    const chosenMap = ref('map0');
+    //TODO: map0: cant reach elevator entrance - entrance on fields around and interaction click (add interaction click)
+    const chosenMap = ref('map1');
     const map = computed(() => {
       switch (chosenMap.value) {
         case 'map0':
@@ -233,52 +236,10 @@ export default defineComponent({
     bottom: 0;
     left: 0;
     margin: 0 0 10px 10px;
-  }
-
-  .player {
-    position: absolute;
-    overflow: hidden;
-    top: calc(50%);
-    left: calc(50%);
-    width: $dimension;
-    height: $dimension * 2;
-    z-index: 50;
-    transition: transform $animationSpeed ease-in-out;
-
-    &__spritesheet {
-      transform: translateX(-75%);
-
-      &--move-down {
-        animation: downSpritesheet $animationSpeed steps(6);
-      } 
-
-      &--move-up {
-        animation: upSpritesheet $animationSpeed steps(6);
-      } 
-
-      &--move-left {
-        animation: leftSpritesheet $animationSpeed steps(6);
-      }
-
-      &--move-right {
-        animation: rightSpritesheet $animationSpeed steps(6);
-      }
-
-      &--face-down {
-        animation: downSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-up {
-        animation: upSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-left {
-        animation: leftSpritesheet $animationSpeed steps(6) infinite;
-      }
-
-      &--face-right {
-        animation: rightSpritesheet $animationSpeed steps(6) infinite;
-      }
+    display: flex;
+    &__row{
+      display:flex;
+      justify-content: center;
     }
   }
 
@@ -288,5 +249,9 @@ export default defineComponent({
 
   .object-lower {
     z-index: 40;
+  }
+
+  .mb-10{
+    margin-bottom: 10px;
   }
 </style>

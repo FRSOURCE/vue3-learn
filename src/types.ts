@@ -1,5 +1,5 @@
 export type MapElements = Array<MapElement>;
-
+//rename models
 export type MapElement = {
     id: number,
     x: number,
