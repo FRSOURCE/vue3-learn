@@ -1,13 +1,13 @@
 <template>
     <div class="elevator-view">
         <div>
-            <button>
+            <button @click="$emit('changeMap','map0')">
                 -1
             </button>
             <span>Basement</span>
         </div>
         <div>
-            <button>
+            <button @click="$emit('changeMap','map1')">
                 0
             </button>
             <span>Lobby</span>
@@ -19,7 +19,8 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-
+name: 'ElevatorView',
+emits: ['changeMap',]
 })
 </script>
 

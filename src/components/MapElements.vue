@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs } from 'vue';
+import { defineComponent, PropType, toRefs, ref, Ref, watch } from 'vue';
 import { MapElements, SpriteBoxStyle, MapSize } from '@/types';
 import { dimension, animationSpeed } from '@/variables/variables';
 
@@ -36,22 +36,39 @@ export default defineComponent({
     setup(props) {
         const { mapElements, mapSize } = toRefs(props);
 
-        const spriteBoxStyle: SpriteBoxStyle = [];
-    
-        mapElements.value.forEach(element => {
-            spriteBoxStyle.push({
-                position: 'absolute',
-                top: `calc(50% - ${((mapSize.value.height - 1) / 2 - element.y - element.yOffset) * dimension + 'px'})`,
-                left: `calc(50% - ${((mapSize.value.width - 1) / 2 - element.x - element.xOffset) * dimension + 'px'})`,
-                display: 'flex',
-                'align-items': 'center',
-                overflow: 'hidden',
-                width: element.width + 'px',
-                height: element.height + 'px',
-                transform: 'translate(-50%,-50%)',
-                transition: `transform ${animationSpeed / 1000 + 's'} ease-in-out`,
+        const spriteBoxStyle: Ref<SpriteBoxStyle> = ref([]);
+
+        mapElements.value.forEach((element, index) => {
+          spriteBoxStyle.value[index] = ({
+              position: 'absolute',
+              top: `calc(50% - ${((mapSize.value.height - 1) / 2 - element.y - element.yOffset) * dimension + 'px'})`,
+              left: `calc(50% - ${((mapSize.value.width - 1) / 2 - element.x - element.xOffset) * dimension + 'px'})`,
+              display: 'flex',
+              'align-items': 'center',
+              overflow: 'hidden',
+              width: element.calculatedWidth + 'px',
+              height: element.calculatedHeight + 'px',
+              transform: 'translate(-50%,-50%)',
+              transition: `transform ${animationSpeed / 1000 + 's'} ease-in-out`,
             })
-        });
+          });
+
+        watch(() => mapElements.value, (mapElements) => {
+          mapElements.forEach((element, index) => {
+            spriteBoxStyle.value[index] = ({
+              position: 'absolute',
+              top: `calc(50% - ${((mapSize.value.height - 1) / 2 - element.y - element.yOffset) * dimension + 'px'})`,
+              left: `calc(50% - ${((mapSize.value.width - 1) / 2 - element.x - element.xOffset) * dimension + 'px'})`,
+              display: 'flex',
+              'align-items': 'center',
+              overflow: 'hidden',
+              width: element.calculatedWidth + 'px',
+              height: element.calculatedHeight + 'px',
+              transform: 'translate(-50%,-50%)',
+              transition: `transform ${animationSpeed / 1000 + 's'} ease-in-out`,
+            })
+          });
+        })
 
         return {
             spriteBoxStyle,
@@ -78,6 +95,18 @@ export default defineComponent({
     }
   }
 
+  .elevator {
+    &--opening {
+      animation: closeElevator $animationSpeed steps(7);
+      transform: translateX(-50%);
+    }
+
+    &--closing {
+      animation: openElevator $animationSpeed steps(7);
+      transform: translateX(0);
+    }
+  }
+
   .quest-arrow {
 
     &__spritesheet {
@@ -101,6 +130,24 @@ export default defineComponent({
   @keyframes openDoor {
     from {
       transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes closeElevator {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes openElevator {
+    from {
+      transform: translateX(-50%);
     }
     to {
       transform: translateX(0);

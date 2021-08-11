@@ -3,11 +3,11 @@
     <div 
       ref="board"
       class="board" 
-      @keydown.down="moveDown()" 
-      @keydown.up="moveUp()" 
-      @keydown.left="moveLeft()" 
-      @keydown.right="moveRight()"
-      @keydown.space="interact()"
+      @keydown.down.prevent="moveDown()" 
+      @keydown.up.prevent="moveUp()" 
+      @keydown.left.prevent="moveLeft()" 
+      @keydown.right.prevent="moveRight()"
+      @keydown.space.prevent="interact()"
       tabindex="0" 
       :style="[moveBoard, mapURL, mapDimension]"
     >
@@ -27,7 +27,7 @@
       </div>
       <!-- <ElButton  icon="el-icon-thumb" /> -->
     </div>
-    <ElevatorView v-if="isElevatorView"/>
+    <ElevatorView v-if="isElevatorView" @changeMap="changeMap" />
   </div>
   
 </template>
@@ -66,17 +66,17 @@ export default defineComponent({
       }
     });
 
-    const mapSize = {width: map.value.mapSize.width, height: map.value.mapSize.height};
+    let mapSize = ref({width: map.value.mapSize.width, height: map.value.mapSize.height});
     const characterCoords = ref({x: map.value.startingCharacterCoords.x, y: map.value.startingCharacterCoords.y});
     const mapElements = ref(map.value.mapElements);
     mapElements.value.forEach((element :MapElement) => {
-      element.width *= dimension;
-      element.height *= dimension;
+      element.calculatedWidth = element.width * dimension;
+        element.calculatedHeight = element.height * dimension;
     })
 
-    const entrance = map.value.entrance;
-    const obstacle = map.value.obstacle;
-    const mapName = map.value.mapName;
+    let entrance = map.value.entrance;
+    let obstacle = map.value.obstacle;
+    let mapName = map.value.mapName;
 
     const board = ref<HTMLDivElement>();
     let moveDirection = ref('');
@@ -85,7 +85,7 @@ export default defineComponent({
 
     const moveDown = () => {
       if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y + 1 || obs.x !== characterCoords.value.x)) return;
-      if (characterCoords.value.y !== mapSize.height - 1 && moveDirection.value === '') {
+      if (characterCoords.value.y !== mapSize.value.height - 1 && moveDirection.value === '') {
         characterCoords.value.y++;
         moveDirection.value = 'down';
         facingDirection.value = 'down';
@@ -94,12 +94,13 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
+        checkEntering();
       }
     };
 
     const moveUp = () => {
       if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y - 1 || obs.x !== characterCoords.value.x)) return;
-      if (characterCoords.value.y !== 2 && moveDirection.value === '') {
+      if ((characterCoords.value.y !== 2 && moveDirection.value === '') || (characterCoords.value.y !== 1 && moveDirection.value === '' && chosenMap.value === 'map0')) {
         characterCoords.value.y--;
         moveDirection.value = 'up';
         facingDirection.value = 'up';
@@ -108,12 +109,13 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
+        checkEntering();
       }
     };
 
     const moveRight = () => {
       if (!obstacle.every((obs :Obstacle) => obs.y !== characterCoords.value.y || obs.x !== characterCoords.value.x + 1)) return;
-      if (characterCoords.value.x !== mapSize.width - 2 && moveDirection.value === '') {
+      if (characterCoords.value.x !== mapSize.value.width - 2 && moveDirection.value === '') {
         characterCoords.value.x++;
         moveDirection.value = 'right';
         facingDirection.value = 'right';
@@ -122,6 +124,7 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
+        checkEntering();
       }
     };
 
@@ -136,15 +139,18 @@ export default defineComponent({
         }, animationSpeed);
         openCloseDoor();
         changeZPosition();
+        checkEntering();
       }
     };
+
+    const interact = () => {
+      //
+    }
 
     const openCloseDoor = () => {
       mapElements.value.forEach((door :MapElement) => {
         if (door.category === 'door') {
           if ((characterCoords.value.x === door.x && characterCoords.value.y === door.y)
-            || (characterCoords.value.x === door.x + 1 && characterCoords.value.y === door.y) 
-            || (characterCoords.value.x === door.x - 1 && characterCoords.value.y === door.y) 
             || (characterCoords.value.x === door.x && characterCoords.value.y === door.y + 1)
             || (characterCoords.value.x === door.x && characterCoords.value.y === door.y - 1)) {
             door.animationClass['doors__spritesheet--opening'] = true;
@@ -152,6 +158,19 @@ export default defineComponent({
           } else {
             door.animationClass['doors__spritesheet--opening'] = false;
             door.animationClass['doors__spritesheet--closing'] = true;
+          }
+        }
+
+        if (door.category === 'elevator') {
+          if ((characterCoords.value.x === door.x && characterCoords.value.y === door.y) ||
+            (characterCoords.value.x === door.x + 1 && characterCoords.value.y === door.y)
+            || (characterCoords.value.x === door.x && characterCoords.value.y === door.y + 1)
+            || (characterCoords.value.x === door.x + 1 && characterCoords.value.y === door.y + 1)) {
+            door.animationClass['elevator--opening'] = true;
+            door.animationClass['elevator--closing'] = false;
+          } else {
+            door.animationClass['elevator--opening'] = false;
+            door.animationClass['elevator--closing'] = true;
           }
         }
       });
@@ -172,45 +191,58 @@ export default defineComponent({
     };
 
     const checkEntering = () => {
-      entrance.entranceFields.forEach((entranceField :EntranceField) => {
+      entrance.forEach((entranceField :EntranceField) => {
         if (characterCoords.value.x === entranceField.x && characterCoords.value.y === entranceField.y) {
-          if (entrance.entrancePosition === 'below') {
-            moveDown();
-          } else if (entrance.entrancePosition === 'above') {
-            moveUp();
-          }
           setTimeout(() => {
-            changeMap();
-          },animationSpeed * 2);
+            openMapChooseView();
+          }, animationSpeed);
         }
-      });
+      })
     };
 
-    const interact = () => {
-      checkEntering();
-    }
-
-    const changeMap = () => {
+    const openMapChooseView = () => {
       isElevatorView.value = true;
     }
-    const translateValue = computed(() =>{
-      console.log(mapSize.width*dimension);
-      console.log(window.innerWidth);
-      console.log(window.innerWidth > mapSize.width*dimension);
-      if(window.innerWidth > mapSize.width*dimension) return true ;
-      return (-mapSize.width*dimension/4) -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px';
+
+    const mapURL = ref({
+        'background-image': `url(${require('../assets/' + mapName)})`,
     });
 
-    const moveBoard = computed (() => `transform: translate(${-dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
+    const changeMap = (mapName: string): void => {
+      chosenMap.value = mapName;
+      isElevatorView.value = false
+
+      mapSize.value = {width: map.value.mapSize.width, height: map.value.mapSize.height};
+      characterCoords.value = {x: map.value.startingCharacterCoords.x, y: map.value.startingCharacterCoords.y};
+      mapElements.value = map.value.mapElements;
+      mapElements.value.forEach((element :MapElement) => {
+        element.calculatedWidth = element.width * dimension;
+        element.calculatedHeight = element.height * dimension;
+      })
+
+      entrance = map.value.entrance;
+      obstacle = map.value.obstacle;
+      mapName = map.value.mapName;
+
+      mapURL.value = {
+        'background-image': `url(${require('../assets/' + mapName)})`
+      }
+    }
+
+    // const translateValue = computed(() =>{
+    //   console.log(mapSize.width*dimension);
+    //   console.log(window.innerWidth);
+    //   console.log(window.innerWidth > mapSize.width*dimension);
+    //   if(window.innerWidth > mapSize.width*dimension) return true ;
+    //   return (-mapSize.width*dimension/4) -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px';
+    // });
+
+    const moveBoard = computed (() => `transform: translate(${-dimension * (characterCoords.value.x - (mapSize.value.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.value.height - 1) / 2) + 'px'})`
     );
 
-    const mapDimension = ref(`height: ${(mapSize.height * dimension) + 'px'}; width: ${(mapSize.width * dimension) + 'px'}`);
+    const mapDimension = ref(`height: ${(mapSize.value.height * dimension) + 'px'}; width: ${(mapSize.value.width * dimension) + 'px'}`);
 
-    const mapURL = {
-        'background-image': `url(${require('../assets/' + mapName)})`,
-    };
-
-    const navigationTop = ref(`top: ${(mapSize.height * dimension) + 'px'};`);
+    const navigationTop = ref(`top: ${(mapSize.value.height * dimension) + 'px'};`);
 
     return{
       board,
@@ -230,6 +262,7 @@ export default defineComponent({
       mapDimension,
       navigationTop,
       interact,
+      changeMap
     }
   }
 });
