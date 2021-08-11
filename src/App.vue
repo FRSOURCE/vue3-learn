@@ -15,7 +15,7 @@
     <ElHeader v-if="isSm">
       <ElButton @click.stop="toggleMenu" icon="el-icon-more" circle/>
     </ElHeader>
-    <ElMain><router-view/></ElMain>
+    <ElMain class="px-0-sm"><router-view/></ElMain>
   </div>
   <!-- <div>
     <VueKit/>
@@ -88,6 +88,13 @@ export default defineComponent({
 
 .inactive-content{
   filter: blur(5px);
+}
+
+.px-0-sm {
+  @media (max-width: 920px){
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 </style>

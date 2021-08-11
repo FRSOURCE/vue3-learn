@@ -1,18 +1,20 @@
 <template>
   <div class="box">
-    <div 
-      ref="board"
-      class="board" 
-      @keydown.down="moveDown()" 
-      @keydown.up="moveUp()" 
-      @keydown.left="moveLeft()" 
-      @keydown.right="moveRight()"
-      @keydown.space="interact()"
-      tabindex="0" 
-      :style="[moveBoard, mapURL, mapDimension]"
-    >
-      <Player :characterCoords="characterCoords" :mapSize="mapSize" :moveDirection="moveDirection" :facingDirection="facingDirection"/>
-      <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
+    <div class="board--wrapper">
+      <div 
+        ref="board"
+        class="board" 
+        @keydown.down="moveDown()" 
+        @keydown.up="moveUp()" 
+        @keydown.left="moveLeft()" 
+        @keydown.right="moveRight()"
+        @keydown.space="interact()"
+        tabindex="0" 
+        :style="[moveBoard, mapURL, mapDimension]"
+      >
+        <Player :characterCoords="characterCoords" :mapSize="mapSize" :moveDirection="moveDirection" :facingDirection="facingDirection"/>
+        <MapElements :mapElements="mapElements" :mapSize="mapSize"/>
+      </div>
     </div>
     <div  class="navigation" :style="[navigationTop]">
       <div >
@@ -194,14 +196,11 @@ export default defineComponent({
       isElevatorView.value = true;
     }
     const translateValue = computed(() =>{
-      console.log(mapSize.width*dimension);
-      console.log(window.innerWidth);
-      console.log(window.innerWidth > mapSize.width*dimension);
-      if(window.innerWidth > mapSize.width*dimension) return true ;
+      if(window.innerWidth > mapSize.width*dimension) return -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px' ;
       return (-mapSize.width*dimension/4) -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px';
     });
 
-    const moveBoard = computed (() => `transform: translate(${-dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
+    const moveBoard = computed (() => `transform: translate(${translateValue.value}, ${ -dimension * (characterCoords.value.y - (mapSize.height - 1) / 2) + 'px'})`
     );
 
     const mapDimension = ref(`height: ${(mapSize.height * dimension) + 'px'}; width: ${(mapSize.width * dimension) + 'px'}`);
@@ -243,6 +242,7 @@ export default defineComponent({
     position: relative;
     display:flex;
     justify-content: center;
+    overflow-y: hidden;
   }
 
   .board {
@@ -251,6 +251,12 @@ export default defineComponent({
     background-position: center;
     background-repeat: no-repeat;
     transition: transform $animationSpeed ease-in-out;
+    margin: 0 auto;
+
+    &--wrapper {
+      width: 90vw;
+      overflow: hidden;
+    }
   }
   
   .navigation{
