@@ -26,6 +26,7 @@
           <ElButton @click="moveDown()" icon="el-icon-caret-bottom" />
           <ElButton @click="moveRight()" icon="el-icon-caret-right" />
         </div>
+      <ElButton class="mb-10" @click="moveUp()" icon="el-icon-thumb" />
       </div>
       <!-- <ElButton  icon="el-icon-thumb" /> -->
     </div>

@@ -9,9 +9,13 @@
   >
     <Menu @close="closeMenu"/>
   </component>
-  <div :class="{
-    'inactive-content': isMenuOpen && isSm
-  }" @click.capture="closeMenu(), stopPropagationIfOpen($event)" >
+  <div
+    class="content"
+    :class="{
+      'content--inactive': isMenuOpen && isSm
+    }"
+    @click.capture="closeMenu(), stopPropagationIfOpen($event)"
+  >
     <ElHeader v-if="isSm">
       <ElButton @click.stop="toggleMenu" icon="el-icon-more" circle/>
     </ElHeader>
@@ -86,8 +90,12 @@ export default defineComponent({
   }
 }
 
-.inactive-content{
-  filter: blur(5px);
+.content {
+  transition: .5s filter ease-in-out;
+
+  &--inactive {
+    filter: blur(5px);
+  }
 }
 
 .px-0-sm {

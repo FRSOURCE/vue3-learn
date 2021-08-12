@@ -1,15 +1,14 @@
 export const editorState = {
-  templateContent: `<template></template>`,
-  script: `<script>
+  templateContent: ``,
+  script: `
    import { ref } from 'vue';
    export default {
      setup() {
        
        return {  };
      }
-   }
-   <\\/script>`,
-  style: `<style></style>`,
+   }`,
+  style: ``,
 };
 
 export type EditorState = typeof editorState;
