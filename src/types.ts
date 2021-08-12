@@ -1,4 +1,5 @@
 export type MapElements = Array<MapElement>;
+
 //rename models
 export type MapElement = {
     id: number,
@@ -8,14 +9,13 @@ export type MapElement = {
     yOffset: number,
     width: number,
     height: number,
+    calculatedWidth: number,
+    calculatedHeight: number,
     isObjectHigher: boolean,
     category: string,
     fileName: string,
     alt: string,
-    animationClass: {
-        'doors__spritesheet--opening': boolean,
-        'doors__spritesheet--closing': boolean,
-    },
+    animationClass: Record<string, boolean>
 }
 
 export type SpriteBoxStyle = Array<{

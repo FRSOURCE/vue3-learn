@@ -1,5 +1,5 @@
 <template>
-    <!-- <Board/> -->
+    <Board/>
     <!-- <ElForm @submit.prevent label-position="top">
         <ElFormItem>
             <ElInput v-model="userName"/>
@@ -9,7 +9,7 @@
         </ElFormItem>
     </ElForm>
     {{ store.state.user.userName }} -->
-    <VueKit />
+    <!-- <VueKit /> -->
 </template>
 
 <script lang="ts">
@@ -26,8 +26,8 @@ export default defineComponent({
         // ElFormItem,
         // ElInput,
         // ElButton,
-        // Board
-        VueKit
+        Board
+        // VueKit
     },
     setup(){
         const userName = ref('');
