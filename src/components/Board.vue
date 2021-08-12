@@ -51,8 +51,6 @@ export default defineComponent({
     Player,
   },
   setup() {
-    //TODO arrow keys should not scroll page
-    //TODO: map0: cant reach elevator entrance - entrance on fields around and interaction click (add interaction click)
     const chosenMap = ref('map0');
     const map = computed(() => {
       switch (chosenMap.value) {
@@ -229,14 +227,6 @@ export default defineComponent({
       }
     }
 
-    // const translateValue = computed(() =>{
-    //   console.log(mapSize.width*dimension);
-    //   console.log(window.innerWidth);
-    //   console.log(window.innerWidth > mapSize.width*dimension);
-    //   if(window.innerWidth > mapSize.width*dimension) return true ;
-    //   return (-mapSize.width*dimension/4) -dimension * (characterCoords.value.x - (mapSize.width - 1) / 2) + 'px';
-    // });
-
     const moveBoard = computed (() => `transform: translate(${-dimension * (characterCoords.value.x - (mapSize.value.width - 1) / 2) + 'px'}, ${ -dimension * (characterCoords.value.y - (mapSize.value.height - 1) / 2) + 'px'})`
     );
 
@@ -288,13 +278,10 @@ export default defineComponent({
   
   .navigation{
     position: fixed;
-    //bottom: 50%;
     left: 0;
     margin: 0 0 10px 10px;
     display: flex;
-    // @media (min-width: 800px) {
-    //   bottom: 0;
-    // }
+
     &__row{
       display:flex;
       justify-content: center;
