@@ -74,6 +74,8 @@ export default defineComponent({
 });
 </script>
 
+<style lang="scss" src="./fonts/font.scss"></style>
+
 <style lang="scss" scoped>
 .menu{
   z-index: 100;

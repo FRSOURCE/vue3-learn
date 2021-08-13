@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div class="board--wrapper">
+    <div class="board-wrapper">
       <div 
         ref="board"
         class="board" 
@@ -54,7 +54,7 @@ export default defineComponent({
     Player,
   },
   setup() {
-    const chosenMap = ref('map0');
+    const chosenMap = ref('map1');
     const map = computed(() => {
       switch (chosenMap.value) {
         case 'map0':
@@ -216,24 +216,28 @@ export default defineComponent({
         'background-image': `url(${require('../assets/' + mapName)})`,
     });
 
-    const changeMap = (mapName: string): void => {
-      chosenMap.value = mapName;
-      isElevatorView.value = false
+    const changeMap = (mapName: string, isButtonClicked: boolean): void => {
+      if (!isButtonClicked) {
+        chosenMap.value = mapName;
 
-      mapSize.value = {width: map.value.mapSize.width, height: map.value.mapSize.height};
-      characterCoords.value = {x: map.value.startingCharacterCoords.x, y: map.value.startingCharacterCoords.y};
-      mapElements.value = map.value.mapElements;
-      mapElements.value.forEach((element :MapElement) => {
-        element.calculatedWidth = element.width * dimension;
-        element.calculatedHeight = element.height * dimension;
-      })
+        mapSize.value = {width: map.value.mapSize.width, height: map.value.mapSize.height};
+        characterCoords.value = {x: map.value.startingCharacterCoords.x, y: map.value.startingCharacterCoords.y};
+        mapElements.value = map.value.mapElements;
+        mapElements.value.forEach((element :MapElement) => {
+          element.calculatedWidth = element.width * dimension;
+          element.calculatedHeight = element.height * dimension;
+        })
 
-      entrance = map.value.entrance;
-      obstacle = map.value.obstacle;
-      mapName = map.value.mapName;
+        entrance = map.value.entrance;
+        obstacle = map.value.obstacle;
+        mapName = map.value.mapName;
 
-      mapURL.value = {
-        'background-image': `url(${require('../assets/' + mapName)})`
+        mapURL.value = {
+          'background-image': `url(${require('../assets/' + mapName)})`
+        }
+        setTimeout(() => {
+          isElevatorView.value = false
+        }, 5000);
       }
     }
 
@@ -284,7 +288,7 @@ export default defineComponent({
     transition: transform $animationSpeed ease-in-out;
     margin: 0 auto;
 
-    &--wrapper {
+    &-wrapper {
       width: 90vw;
       overflow: hidden;
     }
