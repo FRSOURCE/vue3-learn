@@ -42,10 +42,12 @@ export default defineComponent({
             setTimeout(() => {
               map.isClicked = false
               isScreenDarkening.value = true;
-              isButtonClicked.value = false;
             }, 400)
           }
         })
+        setTimeout(() => {
+          isButtonClicked.value = false;
+        }, 1500)
       }
     }
     return {
@@ -88,6 +90,7 @@ export default defineComponent({
   &__item {
 
     &__btn {
+      cursor: pointer;
       width: 2em;
       height: 2em;
       margin: 5px;
@@ -98,13 +101,16 @@ export default defineComponent({
       transition: border-bottom-width transform .3s ease-in-out;
 
       &--clicked {
+        cursor: default;
         border-bottom-width: 1px;
         transform: translateY(2px);
       }
     }
 
     &__map-name {
+      cursor: default;
       margin: 5px;
+      font-size: 2em;
       color: white;
     }
   }

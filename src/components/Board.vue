@@ -216,6 +216,10 @@ export default defineComponent({
         'background-image': `url(${require('../assets/' + mapName)})`,
     });
 
+    const mapDimension = ref(`height: ${(mapSize.value.height * dimension) + 'px'}; width: ${(mapSize.value.width * dimension) + 'px'}`);
+
+    const navigationTop = ref(`top: ${(mapSize.value.height * dimension) + 'px'};`);
+
     const changeMap = (mapName: string, isButtonClicked: boolean): void => {
       if (!isButtonClicked) {
         chosenMap.value = mapName;
@@ -235,15 +239,12 @@ export default defineComponent({
         mapURL.value = {
           'background-image': `url(${require('../assets/' + mapName)})`
         }
+        mapDimension.value = (`height: ${(mapSize.value.height * dimension) + 'px'}; width: ${(mapSize.value.width * dimension) + 'px'}`);
         setTimeout(() => {
           isElevatorView.value = false
-        }, 5000);
+        }, 1500);
       }
     }
-
-    const mapDimension = ref(`height: ${(mapSize.value.height * dimension) + 'px'}; width: ${(mapSize.value.width * dimension) + 'px'}`);
-
-    const navigationTop = ref(`top: ${(mapSize.value.height * dimension) + 'px'};`);
 
     return{
       board,
