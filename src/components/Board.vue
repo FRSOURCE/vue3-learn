@@ -240,6 +240,8 @@ export default defineComponent({
           'background-image': `url(${require('../assets/' + mapName)})`
         }
         mapDimension.value = (`height: ${(mapSize.value.height * dimension) + 'px'}; width: ${(mapSize.value.width * dimension) + 'px'}`);
+
+        if(board.value) board.value.focus();
         setTimeout(() => {
           isElevatorView.value = false
         }, 1500);

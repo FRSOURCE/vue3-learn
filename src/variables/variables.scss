@@ -1,5 +1,10 @@
 $animationSpeed: 0.5s;
 $dimension: 32px;
+$breakpoint1: 480px;
+$breakpoint2: 600px;
+$breakpoint3: 920px;
+$breakpoint4: 1440px;
+$breakpoint5: 1920px;
 
 :export {
     animationSpeed: $animationSpeed;

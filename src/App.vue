@@ -77,6 +77,7 @@ export default defineComponent({
 <style lang="scss" src="./fonts/font.scss"></style>
 
 <style lang="scss" scoped>
+
 .menu{
   z-index: 100;
   position: fixed;
@@ -110,6 +111,12 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 .text-right{
   text-align: right;
 }

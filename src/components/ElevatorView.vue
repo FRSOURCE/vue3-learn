@@ -11,12 +11,13 @@
             $emit('changeMap', `map${i}`, isButtonClicked),
             buttonClicked(map.name)
           " 
-          class="interface__item__btn" :disabled="!map.isActive" 
+          :disabled="!map.isActive" 
+          class="interface__item__btn" 
           :class="{'interface__item__btn--clicked': map.isClicked}"
         >
           {{ i }}
         </button>
-        <span class="interface__item__map-name">{{ map.name }}</span>
+        <span class="interface__item__map-name" :class="{'interface__item__map-name--disabled': !map.isActive}">{{ map.name }}</span>
       </li>
     </ul>
   </div>
@@ -29,6 +30,7 @@ export default defineComponent({
   name: 'ElevatorView',
   emits: ['changeMap'],
   setup () {
+    // TODO: elevator view overflow content according to map
     const maps = ref([{name:'Lobby', isActive: true, isClicked: false}, {name:'Basement', isActive: true, isClicked: false}, {name: 'Canteen', isActive: false, isClicked: false}, {name: 'HR room', isActive: false, isClicked: false}, {name: 'Corpo boxes', isActive: false, isClicked: false}, {name: 'Server room', isActive: false, isClicked: false}, {name: 'Graphics department', isActive: false, isClicked: false}, {name: 'Conference room', isActive: false, isClicked: false}, {name: 'Private room', isActive: false, isClicked: false}, {name: 'Boss room', isActive: false, isClicked: false}])
     const isButtonClicked = ref(false);
     const isScreenDarkening = ref(false);
@@ -61,6 +63,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '../variables/variables.scss';
 
 .elevator-view {
   position: absolute;
@@ -84,15 +87,16 @@ export default defineComponent({
 .interface {
   display: flex;
   flex-direction: column;
-  padding-top: 300px;
-  list-style: none;
+  padding-top: 200px;
 
   &__item {
+    display: flex;
+    align-items: center;
 
     &__btn {
       cursor: pointer;
-      width: 2em;
-      height: 2em;
+      min-width: 2em;
+      min-height: 2em;
       margin: 5px;
       border: 1px solid black;
       border-bottom: 3px solid black;
@@ -105,13 +109,33 @@ export default defineComponent({
         border-bottom-width: 1px;
         transform: translateY(2px);
       }
+
+      &:disabled {
+        filter: brightness(80%);
+      }
     }
 
     &__map-name {
       cursor: default;
+      display: block;
       margin: 5px;
       font-size: 2em;
       color: white;
+
+      &--disabled {
+        color: #ccc;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint2) {
+  .interface {
+    &__item {
+
+      &__map-name {
+        font-size: 1.5em;
+      }
     }
   }
 }
